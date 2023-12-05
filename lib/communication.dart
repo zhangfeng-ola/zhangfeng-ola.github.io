@@ -5,12 +5,17 @@ import 'dart:html' hide Platform, HttpRequest;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:xterm/xterm.dart';
+import './model/cmd.pb.dart';
 
 
 class Communication {
   Communication({ required this.onUpdate, required this.terminal});
   final Function() onUpdate;
   final Terminal terminal;
+  LogLevel get logLevel => _logLevel;
+  LogLevel _logLevel = LogLevel.Verbose;
+  LogType get logType => _logType;
+  LogType _logType = LogType.Console;
 
   WebSocket? _socket;
 
@@ -37,4 +42,29 @@ class Communication {
       });
     }
   }
+
+  void setLogFilterLevel(LogLevel level) {
+    if (null != _socket) {
+      Cmd cmd = Cmd();
+      cmd.op = Op.SetLogLevel;
+      cmd.data =Data();
+      cmd.data.logLevel = level;  
+      /// convert cmd to List<int>
+      _socket!.send(cmd.writeToBuffer());
+      _logLevel = level;
+    }
+  }
+
+  void setLogType(LogType type) {
+    if (null != _socket) {
+      Cmd cmd = Cmd();
+      cmd.op = Op.SetLogType;
+      cmd.data =Data();
+      cmd.data.logType = type;  
+      /// convert cmd to List<int>
+      _socket!.send(cmd.writeToBuffer());
+      _logType = type;
+    }
+  }
+
 }

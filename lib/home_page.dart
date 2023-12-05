@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_local_network_comm/model/cmd.pbenum.dart';
 import 'package:xterm/xterm.dart';
 
 import './communication.dart';
@@ -83,6 +84,64 @@ class _HomePageState extends State<HomePage> {
                 height: 0,
               ),
               Title(color: Colors.white, child: Text(title)),
+              DropdownButton<LogType>(
+                value: comm?.logType ?? LogType.Console,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text("Console"),
+                    value: LogType.Console,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("http"),
+                    value: LogType.Http,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Room Socket"),
+                    value: LogType.RoomSocket,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("IM"),
+                    value: LogType.ImSocket,
+                  ),
+                ],
+                onChanged: (value) {
+                  comm?.setLogType(value!);
+                  setState(() {});
+                },
+              ),
+              DropdownButton<LogLevel>(
+                value: comm?.logLevel ?? LogLevel.Verbose,
+                items: const [
+                  DropdownMenuItem(
+                    child: Text("Verbose"),
+                    value: LogLevel.Verbose,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("info"),
+                    value: LogLevel.Info,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Debug"),
+                    value: LogLevel.Debug,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Warning"),
+                    value: LogLevel.Warning,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Error"),
+                    value: LogLevel.Error,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Wtf"),
+                    value: LogLevel.Wtf,
+                  ),
+                ],
+                onChanged: (value) {
+                  comm?.setLogFilterLevel(value!);
+                  setState(() {});
+                },
+              ),
             ],
           )),
           Expanded(
@@ -90,7 +149,8 @@ class _HomePageState extends State<HomePage> {
             child: TerminalView(
               terminal,
               controller: terminalController,
-              textStyle: TerminalStyle.fromTextStyle(TextStyle(fontSize: 12, color: Colors.white, letterSpacing: 0, fontFamily: 'sans-serif')),
+              textStyle: TerminalStyle.fromTextStyle(
+                  TextStyle(fontSize: 12, color: Colors.white, letterSpacing: 0, fontFamily: 'sans-serif')),
               autofocus: true,
               backgroundOpacity: 1.0,
               onSecondaryTapDown: (details, offset) async {
