@@ -84,6 +84,10 @@ class _HomePageState extends State<HomePage> {
                 height: 0,
               ),
               Title(color: Colors.white, child: Text(title)),
+              SizedBox(
+                width: 20,
+                height: 0,
+              ),
               DropdownButton<LogType>(
                 value: comm?.logType ?? LogType.Console,
                 items: const [
@@ -108,6 +112,10 @@ class _HomePageState extends State<HomePage> {
                   comm?.setLogType(value!);
                   setState(() {});
                 },
+              ),
+              SizedBox(
+                width: 20,
+                height: 0,
               ),
               DropdownButton<LogLevel>(
                 value: comm?.logLevel ?? LogLevel.Verbose,

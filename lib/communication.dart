@@ -7,9 +7,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:xterm/xterm.dart';
 import './model/cmd.pb.dart';
 
-
 class Communication {
-  Communication({ required this.onUpdate, required this.terminal});
+  Communication({required this.onUpdate, required this.terminal});
   final Function() onUpdate;
   final Terminal terminal;
   LogLevel get logLevel => _logLevel;
@@ -24,13 +23,26 @@ class Communication {
     if (kIsWeb) {
       _socket = WebSocket("ws://$webSocketUrl");
 
-      _socket!.onOpen.listen((e) {
-        onUpdate();
-        terminal.write('Connected to WebSocket: $webSocketUrl \r\n');
-      });
+      _socket!.onOpen.listen(
+        (e) {
+          onUpdate();
+          terminal.write('Connected to WebSocket: $webSocketUrl \r\n');
+          setLogType(_logType);
+          setLogFilterLevel(_logLevel);
+
+        },
+        onDone: () {
+          onUpdate();
+          terminal.write('WebSocket connection closed \r\r');
+        },
+        onError: (e){
+          onUpdate();
+          terminal.write('Error connecting to WebSocket $e \r\n');
+        }
+      );
 
       _socket!.onMessage.listen((e) {
-        terminal.write((e.data ?? '')+'\r\n');
+        terminal.write((e.data ?? '') + '\r\n');
       });
 
       _socket!.onError.listen((e) {
@@ -47,8 +59,9 @@ class Communication {
     if (null != _socket) {
       Cmd cmd = Cmd();
       cmd.op = Op.SetLogLevel;
-      cmd.data =Data();
-      cmd.data.logLevel = level;  
+      cmd.data = Data();
+      cmd.data.logLevel = level;
+
       /// convert cmd to List<int>
       _socket!.send(cmd.writeToBuffer());
       _logLevel = level;
@@ -59,12 +72,12 @@ class Communication {
     if (null != _socket) {
       Cmd cmd = Cmd();
       cmd.op = Op.SetLogType;
-      cmd.data =Data();
-      cmd.data.logType = type;  
+      cmd.data = Data();
+      cmd.data.logType = type;
+
       /// convert cmd to List<int>
       _socket!.send(cmd.writeToBuffer());
       _logType = type;
     }
   }
-
 }
