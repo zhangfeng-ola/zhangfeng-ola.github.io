@@ -33,3 +33,13 @@ flutter -d chrome
 
 <img width="1702" alt="image" src="https://github.com/olachat/web_log_console/assets/89000073/52421a01-3826-464a-9cdf-30b699a8e342">
 
+## 我们也提供了线上的发布版本， 不需要本地 flutter 编译环境也可以使用
+
+[Web log console online](https://ola-log.vercel.app)
+
+由于 https 的安全限制，需要把这个 网址 安全内容设置关闭
+
+![image](https://github.com/olachat/web_log_console/assets/89000073/2fdb1688-af7c-46fb-b422-df35a9f17053)
+
+![image](https://github.com/olachat/web_log_console/assets/89000073/3e601c0a-6fe6-4cb2-8d98-b626692af15e)
+
