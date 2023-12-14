@@ -57,7 +57,8 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         child: Container(
                           color: index % 2 == 0 ? Colors.white.withOpacity(0.8) : Colors.white.withOpacity(1.0),
                           child: Text(
-                            widget.vm.filterBuffer.elementAt(index)['url'] ?? widget.vm.filterBuffer.elementAt(index).toString(),
+                            widget.vm.filterBuffer.elementAt(index)['url'] ??
+                                widget.vm.filterBuffer.elementAt(index).toString(),
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -80,7 +81,7 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        width: 500,
+                        width: 300,
                         child: TextField(
                           textCapitalization: TextCapitalization.sentences,
                           controller: _txtEditController,
@@ -98,6 +99,16 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         child: const Text('Filter'),
                         onPressed: () {
                           widget.vm.setFilter(_txtEditController.text);
+                        },
+                      ),
+                      SizedBox(
+                        width: 20,
+                        height: 0,
+                      ),
+                      ElevatedButton(
+                        child: const Text('Clear'),
+                        onPressed: () {
+                          widget.vm.clear();
                         },
                       ),
                     ],

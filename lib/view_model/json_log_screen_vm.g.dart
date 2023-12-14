@@ -137,6 +137,17 @@ mixin _$JsonLogScreenVm on _JsonLogScreenVm, Store {
   }
 
   @override
+  void clear() {
+    final _$actionInfo = _$_JsonLogScreenVmActionController.startAction(
+        name: '_JsonLogScreenVm.clear');
+    try {
+      return super.clear();
+    } finally {
+      _$_JsonLogScreenVmActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 

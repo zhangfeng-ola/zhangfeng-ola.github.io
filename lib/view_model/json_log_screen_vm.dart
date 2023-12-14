@@ -77,4 +77,11 @@ abstract class _JsonLogScreenVm with Store {
       _bufferReceived++;
     }
   }
+
+  @action
+  void clear(){
+    _bufferReceived == 0;
+    _filterBuffer = ListQueue();
+    _buffer = ListQueue();
+  }
 }
