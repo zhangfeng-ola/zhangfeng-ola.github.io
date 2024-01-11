@@ -3,7 +3,7 @@
 ### web_log_console项目根目录下运行
 
 ```
-flutter -d chrome
+flutter run -d chrome
 ```
 
 启动本地网页
