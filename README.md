@@ -1,7 +1,8 @@
 # 电脑端查看 partying log 
 
-### 更新内容
-1. 新增搜索模式，对于巨大的json 数据实现搜索定位
+### 更新内容:
+版本v1.1.0
+1. 新增搜索模式，对于巨大的json 数据实现搜索定位 
 <img width="1707" alt="image" src="https://github.com/olachat/web_log_console/assets/89000073/85c27f93-3c8c-4340-8522-ee8d9876b7e2">
 
 
