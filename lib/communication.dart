@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:html' hide Platform, HttpRequest;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:my_local_network_comm/view_model/json_log_screen_vm.dart';
+import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 import 'package:xterm/xterm.dart';
 import './model/cmd.pb.dart';
 

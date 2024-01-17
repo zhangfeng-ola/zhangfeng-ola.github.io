@@ -3,8 +3,11 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:web_log_console/model/display.pb.dart';
 
 // Include generated file
 part 'json_log_screen_vm.g.dart';
@@ -16,6 +19,23 @@ class JsonLogScreenVm = _JsonLogScreenVm with _$JsonLogScreenVm;
 abstract class _JsonLogScreenVm with Store {
   _JsonLogScreenVm() {}
   final int _bufferSize = 50;
+
+  List<GlobalKey> keyList = [];
+  int _currentIndex = -1;
+  void resetIndex(){
+    _currentIndex = -1;
+  }
+  void scrollToNext(void Function(GlobalKey) callback,){
+    if(keyList.isEmpty) return;
+    _currentIndex = max((_currentIndex +1)%keyList.length, 0);
+    callback(keyList[_currentIndex]);
+  }
+
+  void scrollToPrevious(void Function(GlobalKey) callback,){
+    if(keyList.isEmpty) return;
+    _currentIndex = max((_currentIndex -1)%keyList.length, 0);
+    callback(keyList[_currentIndex]);
+  }
 
   @readonly
   ListQueue<Map<String, dynamic>> _buffer = ListQueue();
@@ -31,6 +51,30 @@ abstract class _JsonLogScreenVm with Store {
 
   @readonly
   String _filter = '';  
+
+  @readonly
+  String _keyWord = '';
+
+  @readonly
+  DisplayModel _displayModel = DisplayModel.Normal;
+
+  @action
+  void updateKeyWord(String keyWord) {
+    _keyWord = keyWord;
+  }
+
+  @action
+  void updateDisplayModel(DisplayModel displayModel) {
+    _displayModel = displayModel;
+  }
+
+  void switchDisplayModel(){
+    if(_displayModel == DisplayModel.Normal){
+      _displayModel = DisplayModel.Search;
+    }else{
+      _displayModel = DisplayModel.Normal;
+    }
+  }
 
   @action
   void addBuffer(Map<String, dynamic> item, String itemString) {

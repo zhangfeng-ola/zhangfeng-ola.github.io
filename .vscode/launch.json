@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "my_local_network_comm",
+            "name": "web_log_console",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "my_local_network_comm (profile mode)",
+            "name": "web_log_console (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "my_local_network_comm (release mode)",
+            "name": "web_log_console (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

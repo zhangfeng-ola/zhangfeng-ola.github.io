@@ -100,8 +100,66 @@ mixin _$JsonLogScreenVm on _JsonLogScreenVm, Store {
     });
   }
 
+  late final _$_keyWordAtom =
+      Atom(name: '_JsonLogScreenVm._keyWord', context: context);
+
+  String get keyWord {
+    _$_keyWordAtom.reportRead();
+    return super._keyWord;
+  }
+
+  @override
+  String get _keyWord => keyWord;
+
+  @override
+  set _keyWord(String value) {
+    _$_keyWordAtom.reportWrite(value, super._keyWord, () {
+      super._keyWord = value;
+    });
+  }
+
+  late final _$_displayModelAtom =
+      Atom(name: '_JsonLogScreenVm._displayModel', context: context);
+
+  DisplayModel get displayModel {
+    _$_displayModelAtom.reportRead();
+    return super._displayModel;
+  }
+
+  @override
+  DisplayModel get _displayModel => displayModel;
+
+  @override
+  set _displayModel(DisplayModel value) {
+    _$_displayModelAtom.reportWrite(value, super._displayModel, () {
+      super._displayModel = value;
+    });
+  }
+
   late final _$_JsonLogScreenVmActionController =
       ActionController(name: '_JsonLogScreenVm', context: context);
+
+  @override
+  void updateKeyWord(String keyWord) {
+    final _$actionInfo = _$_JsonLogScreenVmActionController.startAction(
+        name: '_JsonLogScreenVm.updateKeyWord');
+    try {
+      return super.updateKeyWord(keyWord);
+    } finally {
+      _$_JsonLogScreenVmActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateDisplayModel(DisplayModel displayModel) {
+    final _$actionInfo = _$_JsonLogScreenVmActionController.startAction(
+        name: '_JsonLogScreenVm.updateDisplayModel');
+    try {
+      return super.updateDisplayModel(displayModel);
+    } finally {
+      _$_JsonLogScreenVmActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void addBuffer(Map<String, dynamic> item, String itemString) {

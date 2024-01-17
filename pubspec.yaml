@@ -1,4 +1,4 @@
-name: my_local_network_comm
+name: web_log_console
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

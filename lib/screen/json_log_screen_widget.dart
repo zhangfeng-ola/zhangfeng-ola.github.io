@@ -2,10 +2,13 @@
 
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:json_view/json_view.dart';
-import 'package:my_local_network_comm/view_model/json_log_screen_vm.dart';
+import 'package:web_log_console/model/display.pbenum.dart';
+import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 
 class JsonLogScreenWidget extends StatefulWidget {
   final JsonLogScreenVm vm;
@@ -43,36 +46,41 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    // reverse: true,
-                    padding: const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 0, top: 8),
-                    itemCount: widget.vm.filterBuffer.length,
-                    itemBuilder: ((context, index) {
-                      return InkWell(
-                        onTap: () {
-                          widget.vm.setSelected(widget.vm.filterBuffer.elementAt(index));
-                        },
-                        child: Container(
-                          color: index % 2 == 0 ? Colors.white.withOpacity(0.8) : Colors.white.withOpacity(1.0),
-                          child: Text(
-                            widget.vm.filterBuffer.elementAt(index)['url'] ??
-                                widget.vm.filterBuffer.elementAt(index).toString(),
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black,
+                if (widget.vm.displayModel == DisplayModel.Normal)
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      // reverse: true,
+                      padding: const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 0, top: 8),
+                      itemCount: widget.vm.filterBuffer.length,
+                      itemBuilder: ((context, index) {
+                        return InkWell(
+                          onTap: () {
+                            widget.vm.setSelected(widget.vm.filterBuffer.elementAt(index));
+                          },
+                          child: Container(
+                            color: index % 2 == 0 ? Colors.white.withOpacity(0.8) : Colors.white.withOpacity(1.0),
+                            child: Text(
+                              widget.vm.filterBuffer.elementAt(index)['url'] ??
+                                  widget.vm.filterBuffer.elementAt(index).toString(),
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                    ),
                   ),
-                ),
+                if (widget.vm.displayModel == DisplayModel.Search)
+                  Expanded(
+                    child: _buildSearchResult(),
+                  ),
                 SizedBox(
                   height: 80,
                   child: Row(
@@ -92,25 +100,74 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         ),
                       ),
                       SizedBox(
-                        width: 20,
+                        width: 10,
                         height: 0,
                       ),
                       ElevatedButton(
-                        child: const Text('Filter'),
+                         child: Observer(builder: (_) {
+                          return Text(widget.vm.displayModel == DisplayModel.Normal ? 'Filter' : 'Search');
+                        }),
                         onPressed: () {
-                          widget.vm.setFilter(_txtEditController.text);
+                          if (widget.vm.displayModel == DisplayModel.Normal) {
+                            widget.vm.setFilter(_txtEditController.text);
+                          } else if (widget.vm.displayModel == DisplayModel.Search) {
+                            widget.vm.updateKeyWord(_txtEditController.text);
+                          }
                         },
                       ),
                       SizedBox(
-                        width: 20,
+                        width: 10,
+                        height: 0,
+                      ),
+                      if(widget.vm.displayModel == DisplayModel.Normal )
+                        ElevatedButton(
+                          child: const Text('Clear'),
+                          onPressed: () {
+                            if (widget.vm.displayModel == DisplayModel.Normal) {
+                              widget.vm.clear();
+                            } else if (widget.vm.displayModel == DisplayModel.Search) {
+                              widget.vm.updateKeyWord('');
+                            }
+                          },
+                        ),
+                      SizedBox(
+                        width: 10,
                         height: 0,
                       ),
                       ElevatedButton(
-                        child: const Text('Clear'),
+                        child: Observer(builder: (_) {
+                          return Text(widget.vm.displayModel == DisplayModel.Normal ? 'Normal Model' : 'Search Model');
+                        }),
                         onPressed: () {
-                          widget.vm.clear();
+                          widget.vm.switchDisplayModel();
                         },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: widget.vm.displayModel == DisplayModel.Normal ? Colors.blue : Colors.green,
+                        )
                       ),
+                      if(widget.vm.displayModel == DisplayModel.Search )
+                        ElevatedButton(
+                          child: const Text('Next'),
+                          onPressed: () {
+                            widget.vm.scrollToNext((p0) {
+                              if(mounted && null != p0.currentContext){
+                                Scrollable.ensureVisible(p0.currentContext!, alignment: 0.2, duration: const Duration(milliseconds: 0) );
+                              } 
+                             });
+                          },
+                        ),
+                      if(widget.vm.displayModel == DisplayModel.Search )
+                        ElevatedButton(
+                          child: const Text('Previous'),
+                          onPressed: () {
+                            widget.vm.scrollToPrevious((p0) {
+                              if(mounted && null != p0.currentContext){
+                                Scrollable.ensureVisible(p0.currentContext!, alignment: 0.2, duration: const Duration(milliseconds: 0));
+                              } 
+                             }); 
+                          },
+                        ),
                     ],
                   ),
                 ),
@@ -130,7 +187,7 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                   openAtStart: false,
                   arrow: Icon(Icons.arrow_forward),
                   // too large depth will cause performance issue
-                  depth: 5,
+                  depth: 0,
                 ),
                 color: const JsonColorScheme(),
               ),
@@ -142,5 +199,60 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
         ),
       ],
     );
+  }
+
+  Widget _buildSearchResult() {
+    return Observer(builder: (_) {
+      if (widget.vm.keyWord.isEmpty || null == widget.vm.selected) {
+        return const SizedBox.shrink();
+      }
+      List<InlineSpan> textSpans = [];
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      String jsonString = encoder.convert(widget.vm.selected);
+      String searchKey = widget.vm.keyWord;
+      List<GlobalKey> keys = [];
+      jsonString.splitMapJoin(RegExp('(${RegExp.escape(searchKey)})'), onMatch: (m) {
+        GlobalKey key = GlobalKey();
+        keys.add(key);
+        textSpans.add(
+          WidgetSpan(
+            child: Text(
+            m[0] ?? '',
+            key: key, 
+            style: const TextStyle(
+              color: Color(0xFFFF70CE),
+              fontSize: 16,
+              fontFamily: 'PingFang SC',
+              fontWeight: FontWeight.bold,
+              letterSpacing: -0.32,
+            ),
+            ),
+          ),
+        );
+        return m[0]!;
+      }, onNonMatch: (n) {
+        textSpans.add(TextSpan(
+          text: n,
+          style: const TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontFamily: 'PingFang SC',
+            fontWeight: FontWeight.w500,
+            letterSpacing: -0.32,
+          )));
+        return n;
+      });
+      widget.vm.keyList = keys;
+      return SingleChildScrollView(
+        child: Text.rich(
+          TextSpan(
+            children: [
+              ...textSpans,
+            ],
+          ),
+          textAlign: TextAlign.left,
+        ),
+      );
+    });
   }
 }

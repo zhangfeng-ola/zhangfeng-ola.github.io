@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:my_local_network_comm/model/cmd.pbenum.dart';
-import 'package:my_local_network_comm/screen/json_log_screen_widget.dart';
-import 'package:my_local_network_comm/view_model/home_page_vm.dart';
-import 'package:my_local_network_comm/view_model/json_log_screen_vm.dart';
+import 'package:web_log_console/model/cmd.pbenum.dart';
+import 'package:web_log_console/screen/json_log_screen_widget.dart';
+import 'package:web_log_console/view_model/home_page_vm.dart';
+import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 import 'package:xterm/xterm.dart';
 
 import './communication.dart';

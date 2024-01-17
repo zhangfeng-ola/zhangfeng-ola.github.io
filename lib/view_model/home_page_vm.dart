@@ -2,7 +2,7 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
 import 'package:mobx/mobx.dart';
-import 'package:my_local_network_comm/model/cmd.pbenum.dart';
+import 'package:web_log_console/model/cmd.pbenum.dart';
 
 // Include generated file
 part 'home_page_vm.g.dart';

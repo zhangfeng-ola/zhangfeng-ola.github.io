@@ -1,0 +1,7 @@
+syntax = "proto3";
+// create a proto buffer file
+// define the message type Cmd which include an enum Op and a message Data
+enum DisplayModel {
+  Normal = 0;
+  Search= 1;
+}
