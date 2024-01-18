@@ -203,12 +203,33 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
 
   Widget _buildSearchResult() {
     return Observer(builder: (_) {
-      if (widget.vm.keyWord.isEmpty || null == widget.vm.selected) {
+      if(null == widget.vm.selected){
         return const SizedBox.shrink();
       }
       List<InlineSpan> textSpans = [];
       JsonEncoder encoder = const JsonEncoder.withIndent('  ');
       String jsonString = encoder.convert(widget.vm.selected);
+      if (widget.vm.keyWord.isEmpty) {
+        return SingleChildScrollView(
+          child: SelectableText.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: jsonString,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                    fontFamily: 'PingFang SC',
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.32,
+                  ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.left,
+          ),
+        );
+      }
       String searchKey = widget.vm.keyWord;
       List<GlobalKey> keys = [];
       jsonString.splitMapJoin(RegExp('(${RegExp.escape(searchKey)})'), onMatch: (m) {
@@ -244,7 +265,7 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
       });
       widget.vm.keyList = keys;
       return SingleChildScrollView(
-        child: Text.rich(
+        child: SelectableText.rich(
           TextSpan(
             children: [
               ...textSpans,
