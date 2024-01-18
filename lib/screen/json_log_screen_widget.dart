@@ -187,7 +187,7 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                   openAtStart: false,
                   arrow: Icon(Icons.arrow_forward),
                   // too large depth will cause performance issue
-                  depth: 0,
+                  depth: 2,
                 ),
                 color: const JsonColorScheme(),
               ),
