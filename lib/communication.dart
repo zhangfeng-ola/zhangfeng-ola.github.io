@@ -44,6 +44,7 @@ class Communication {
       _socket!.onMessage.listen((e) {
         switch (_logType) {
           case LogType.Console:
+          case LogType.Tracker:
             terminal.write((e.data ?? '') + '\r\n');
             break;
           case LogType.Http:

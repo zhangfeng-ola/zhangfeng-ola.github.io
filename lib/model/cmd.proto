@@ -21,6 +21,7 @@ enum LogType {
   Http = 1;
   RoomSocket = 2;
   ImSocket = 3;
+  Tracker = 4;
 }
 
 message Cmd {

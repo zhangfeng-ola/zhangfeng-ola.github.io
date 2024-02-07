@@ -125,6 +125,10 @@ class _HomePageState extends State<HomePage> {
                           child: Text("IM"),
                           value: LogType.ImSocket,
                         ),
+                        DropdownMenuItem(
+                          child: Text("埋点"),
+                          value: LogType.Tracker,
+                        ),
                       ],
                       onChanged: (value) {
                         comm?.setLogType(value!);

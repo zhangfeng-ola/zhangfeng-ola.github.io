@@ -54,12 +54,14 @@ class LogType extends ProtobufEnum {
   static const LogType Http = LogType._(1, const bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'Http');
   static const LogType RoomSocket = LogType._(2, const bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RoomSocket');
   static const LogType ImSocket = LogType._(3, const bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ImSocket');
+  static const LogType Tracker = LogType._(4, const bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'Tracker');
 
   static const List<LogType> values = <LogType> [
     Console,
     Http,
     RoomSocket,
     ImSocket,
+    Tracker,
   ];
 
   static final Map<int, LogType> _byValue = ProtobufEnum.initByValue(values);

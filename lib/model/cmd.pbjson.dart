@@ -43,11 +43,12 @@ const LogType$json = const {
     const {'1': 'Http', '2': 1},
     const {'1': 'RoomSocket', '2': 2},
     const {'1': 'ImSocket', '2': 3},
+    const {'1': 'Tracker', '2': 4},
   ],
 };
 
 /// Descriptor for `LogType`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final Uint8List logTypeDescriptor = base64Decode('CgdMb2dUeXBlEgsKB0NvbnNvbGUQABIICgRIdHRwEAESDgoKUm9vbVNvY2tldBACEgwKCEltU29ja2V0EAM=');
+final Uint8List logTypeDescriptor = base64Decode('CgdMb2dUeXBlEgsKB0NvbnNvbGUQABIICgRIdHRwEAESDgoKUm9vbVNvY2tldBACEgwKCEltU29ja2V0EAMSCwoHVHJhY2tlchAE');
 @Deprecated('Use cmdDescriptor instead')
 const Cmd$json = const {
   '1': 'Cmd',
