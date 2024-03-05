@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   http:
-  xterm: ^4.0.0
+  xterm: ^3.5.0
   protobuf: ^3.1.0
   mobx: ^2.2.0
   flutter_mobx: ^2.1.0
@@ -80,10 +80,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Monospace
-      fonts:
-        - asset: assets/fonts/Monospace.ttf
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
