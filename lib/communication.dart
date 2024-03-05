@@ -41,7 +41,7 @@ class Communication {
       'debug': '\u001b[38;5;33m',
       'info': '\u001b[32m',
       'warning': '\u001b[33m',
-      'error': '\u001b[31m',
+      'error': '\u001b[38;5;196m',
     };
 
     return '${colours[msgLogLevel]}$msg';
