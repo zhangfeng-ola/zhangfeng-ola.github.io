@@ -23,22 +23,28 @@ class Communication {
 
   WebSocket? _socket;
 
-  bool isWithinLogLevel(String data) {
-    String msgLogLevel = data[1];
-    switch (_logLevel) {
-      case LogLevel.Verbose:
-        return true;
-      case LogLevel.Debug:
-        return msgLogLevel != 'V';
-      case LogLevel.Info:
-        return msgLogLevel != 'V' && msgLogLevel != 'D';
-      case LogLevel.Warning:
-        return msgLogLevel == 'W' && msgLogLevel == 'E';
-      case LogLevel.Error:
-        return msgLogLevel == 'E';
-      default:
-        return false;
-    }
+  int getLogLevelValue(String msgLogLevel) {
+    final logLevels = {
+      'verbose': LogLevel.Verbose.value,
+      'debug': LogLevel.Debug.value,
+      'info': LogLevel.Info.value,
+      'warning': LogLevel.Warning.value,
+      'error': LogLevel.Error.value,
+    };
+
+    return logLevels[msgLogLevel.toLowerCase()] ?? -1;
+  }
+
+  String highlightMsg(String msg, String msgLogLevel) {
+    final colours = {
+      'verbose': '\u001b[37m',
+      'debug': '\u001b[38;5;33m',
+      'info': '\u001b[32m',
+      'warning': '\u001b[33m',
+      'error': '\u001b[31m',
+    };
+
+    return '${colours[msgLogLevel]}$msg';
   }
 
   Future<void> bindToWebSocket(String webSocketUrl) async {
@@ -60,11 +66,18 @@ class Communication {
       });
 
       _socket!.onMessage.listen((e) {
+        
         switch (_logType) {
           case LogType.Console:
           case LogType.Tracker:
-            if (isWithinLogLevel(e.data.toString())) {
-              terminal.write((e.data ?? '') + '\r\n');
+            final jsonData = jsonDecode(e.data.toString());
+            final msgLogLevel = jsonData['logLevel'];
+            final lines = jsonData['lines'];
+            if (getLogLevelValue(msgLogLevel) >= _logLevel.value) {
+              for (String msg in lines) {
+                final highlightedMsg = highlightMsg(msg, msgLogLevel);
+                terminal.write((highlightedMsg ?? '') + '\r\n');
+              }
             }
             break;
           case LogType.Http:
