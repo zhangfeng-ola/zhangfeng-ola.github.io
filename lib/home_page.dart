@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -100,7 +102,11 @@ class _HomePageState extends State<HomePage> {
                     width: 20,
                     height: 0,
                   ),
-                  Title(color: Colors.white, child: Text(title)),
+                  Title(
+                      color: Colors.white,
+                      child: Text(
+                        title
+                      )),
                   SizedBox(
                     width: 20,
                     height: 0,
@@ -149,12 +155,12 @@ class _HomePageState extends State<HomePage> {
                           value: LogLevel.Verbose,
                         ),
                         DropdownMenuItem(
-                          child: Text("info"),
-                          value: LogLevel.Info,
-                        ),
-                        DropdownMenuItem(
                           child: Text("Debug"),
                           value: LogLevel.Debug,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("info"),
+                          value: LogLevel.Info,
                         ),
                         DropdownMenuItem(
                           child: Text("Warning"),
@@ -172,6 +178,7 @@ class _HomePageState extends State<HomePage> {
                       onChanged: (value) {
                         comm?.setLogFilterLevel(value!);
                         vm.updateLogLevel(value!);
+                        terminal.write('Logging level has changed to ' + value.name);
                       },
                     );
                   }),
@@ -188,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                   terminal,
                   controller: terminalController,
                   textStyle: TerminalStyle.fromTextStyle(
-                      TextStyle(fontSize: 12, color: Colors.white, letterSpacing: 0, fontFamily: 'sans-serif')),
+                      TextStyle(fontSize: 17, color: Colors.white, letterSpacing: 0, fontFamily: 'Monospace')),
                   autofocus: true,
                   backgroundOpacity: 1.0,
                   onSecondaryTapDown: (details, offset) async {
