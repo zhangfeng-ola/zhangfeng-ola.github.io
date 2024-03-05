@@ -23,24 +23,6 @@ class Communication {
 
   WebSocket? _socket;
 
-  bool isWithinLogLevel(String data) {
-    String msgLogLevel = data[1];
-    switch (_logLevel) {
-      case LogLevel.Verbose:
-        return true;
-      case LogLevel.Debug:
-        return msgLogLevel != 'V';
-      case LogLevel.Info:
-        return msgLogLevel != 'V' && msgLogLevel != 'D';
-      case LogLevel.Warning:
-        return msgLogLevel == 'W' && msgLogLevel == 'E';
-      case LogLevel.Error:
-        return msgLogLevel == 'E';
-      default:
-        return false;
-    }
-  }
-
   Future<void> bindToWebSocket(String webSocketUrl) async {
     print("FeiLong: bindToWebSocket: $webSocketUrl");
     if (kIsWeb) {
@@ -63,9 +45,7 @@ class Communication {
         switch (_logType) {
           case LogType.Console:
           case LogType.Tracker:
-            if (isWithinLogLevel(e.data.toString())) {
-              terminal.write((e.data ?? '') + '\r\n');
-            }
+            terminal.write((e.data ?? '') + '\r\n');
             break;
           case LogType.Http:
           case LogType.ImSocket:
