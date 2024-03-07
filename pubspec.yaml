@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   http:
-  xterm: ^3.5.0
+  xterm: ^4.0.0
   protobuf: ^3.1.0
   mobx: ^2.2.0
   flutter_mobx: ^2.1.0
