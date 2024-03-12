@@ -1,6 +1,3 @@
-// @dart = 2.12
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'dart:convert';
 import 'dart:html' hide Platform, HttpRequest;
 
@@ -8,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 import 'package:xterm/xterm.dart';
 import './model/cmd.pb.dart';
+
 
 class Communication {
   Communication({required this.onUpdate, required this.terminal, required this.caches});
@@ -22,6 +20,8 @@ class Communication {
   LogType _logType = LogType.Console;
 
   WebSocket? _socket;
+  List<String> cachedMessages = [];
+  Map<String, String> cachedLogLevel = {};
 
   int getLogLevelValue(String msgLogLevel) {
     final logLevels = {
@@ -73,9 +73,11 @@ class Communication {
             final jsonData = jsonDecode(e.data.toString());
             final msgLogLevel = jsonData['logLevel'];
             final lines = jsonData['lines'];
-            if (getLogLevelValue(msgLogLevel) >= _logLevel.value) {
-              for (String msg in lines) {
-                final highlightedMsg = highlightMsg(msg, msgLogLevel);
+            for (String msg in lines) {
+              final highlightedMsg = highlightMsg(msg, msgLogLevel);
+              cachedMessages.add(highlightedMsg ?? '');
+              cachedLogLevel[highlightedMsg] = msgLogLevel;
+              if (getLogLevelValue(msgLogLevel) >= _logLevel.value) {
                 terminal.write((highlightedMsg ?? '') + '\r\n');
               }
             }
@@ -102,15 +104,13 @@ class Communication {
   }
 
   void setLogFilterLevel(LogLevel level) {
-    if (null != _socket) {
-      Cmd cmd = Cmd();
-      cmd.op = Op.SetLogLevel;
-      cmd.data = Data();
-      cmd.data.logLevel = level;
-
-      /// convert cmd to List<int>
-      _socket!.send(cmd.writeToBuffer());
-      _logLevel = level;
+    _logLevel = level;
+    terminal.write('\x1b[2J\x1b[3J\x1b[H');
+    terminal.write('\u001b[37mOlaChat LogConsole \r\n');
+    for (String msg in cachedMessages) {
+      if (getLogLevelValue(cachedLogLevel[msg]!) >= _logLevel.value) {
+        terminal.write(msg + '\r\n');
+      }
     }
   }
 
