@@ -149,12 +149,12 @@ class _HomePageState extends State<HomePage> {
                           value: LogLevel.Verbose,
                         ),
                         DropdownMenuItem(
-                          child: Text("info"),
-                          value: LogLevel.Info,
-                        ),
-                        DropdownMenuItem(
                           child: Text("Debug"),
                           value: LogLevel.Debug,
+                        ),
+                        DropdownMenuItem(
+                          child: Text("Info"),
+                          value: LogLevel.Info,
                         ),
                         DropdownMenuItem(
                           child: Text("Warning"),
@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                       onChanged: (value) {
                         comm?.setLogFilterLevel(value!);
                         vm.updateLogLevel(value!);
-                        terminal.write('Logging level has changed to ' + value.name + '\r\n');
+                        terminal.write('\r\n' + '\u001b[37mLogging level has changed to ' + value.name + '\r\n\r\n');
                       },
                     );
                   }),
