@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:web_log_console/model/cmd.pbenum.dart';
 import 'package:web_log_console/screen/json_log_screen_widget.dart';
 import 'package:web_log_console/view_model/home_page_vm.dart';
 import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 import 'package:xterm/xterm.dart';
+
+import './dialog/font_styling_dialog.dart';
 
 import './communication.dart';
 
@@ -32,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     createComm();
+    vm.retrieveFromLocalStorage();
     super.initState();
     caches[LogType.Http] = JsonLogScreenVm();
     caches[LogType.RoomSocket] = JsonLogScreenVm();
@@ -77,13 +81,13 @@ class _HomePageState extends State<HomePage> {
                     child: TextField(
                       textCapitalization: TextCapitalization.sentences,
                       controller: _txtEditController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'localhost:8080',
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                     height: 0,
                   ),
@@ -96,38 +100,32 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
                   ),
-                  SizedBox(
-                    width: 20,
-                    height: 0,
-                  ),
+                  const SizedBox(width: 20),
                   Title(color: Colors.white, child: Text(title)),
-                  SizedBox(
-                    width: 20,
-                    height: 0,
-                  ),
+                  const SizedBox(width: 20),
                   Observer(builder: (_) {
                     return DropdownButton<LogType>(
                       value: vm.logType,
                       items: const [
                         DropdownMenuItem(
-                          child: Text("Console"),
                           value: LogType.Console,
+                          child: Text("Console"),
                         ),
                         DropdownMenuItem(
-                          child: Text("http"),
                           value: LogType.Http,
+                          child: Text("http"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Room Socket"),
                           value: LogType.RoomSocket,
+                          child: Text("Room Socket"),
                         ),
                         DropdownMenuItem(
-                          child: Text("IM"),
                           value: LogType.ImSocket,
+                          child: Text("IM"),
                         ),
                         DropdownMenuItem(
-                          child: Text("埋点"),
                           value: LogType.Tracker,
+                          child: Text("埋点"),
                         ),
                       ],
                       onChanged: (value) {
@@ -136,86 +134,79 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   }),
-                  SizedBox(
-                    width: 20,
-                    height: 0,
-                  ),
+                  const SizedBox(width: 20),
                   Observer(builder: (_) {
                     return DropdownButton<LogLevel>(
                       value: vm.logLevel,
                       items: const [
                         DropdownMenuItem(
-                          child: Text("Verbose"),
                           value: LogLevel.Verbose,
+                          child: Text("Verbose"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Debug"),
                           value: LogLevel.Debug,
+                          child: Text("Debug"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Info"),
                           value: LogLevel.Info,
+                          child: Text("Info"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Warning"),
                           value: LogLevel.Warning,
+                          child: Text("Warning"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Error"),
                           value: LogLevel.Error,
+                          child: Text("Error"),
                         ),
                         DropdownMenuItem(
-                          child: Text("Wtf"),
                           value: LogLevel.Wtf,
+                          child: Text("Wtf"),
                         ),
                       ],
                       onChanged: (value) {
                         comm?.setLogFilterLevel(value!);
                         vm.updateLogLevel(value!);
-                        terminal.write('\r\n' + '\u001b[37mLogging level has changed to ' + value.name + '\r\n\r\n');
+                        terminal.write('\r\n' +
+                            '\u001b[37mLogging level has changed to ' +
+                            value.name +
+                            '\r\n\r\n');
                       },
                     );
                   }),
+                  const SizedBox(width: 20),
+                  IconButton(
+                      iconSize: 20.0,
+                      icon: const Icon(Icons.format_color_text_outlined),
+                      onPressed: () {
+                        FontStylingDialog.show(
+                            context: context, homePageVm: vm);
+                      }),
                 ],
               ),
             )),
             Expanded(
               flex: 10,
               child: Observer(builder: (_) {
-                if (vm.logType == LogType.Http || vm.logType == LogType.ImSocket || vm.logType == LogType.RoomSocket) {
+                if (vm.logType == LogType.Http ||
+                    vm.logType == LogType.ImSocket ||
+                    vm.logType == LogType.RoomSocket) {
                   return JsonLogScreenWidget(vm: caches[vm.logType]!);
                 }
                 return TerminalView(
                   terminal,
                   controller: terminalController,
                   textStyle: TerminalStyle.fromTextStyle(
-                      TextStyle(fontSize: 12, color: Colors.white, letterSpacing: 0, fontFamily: 'sans-serif')),
-                  autofocus: true,
-                  theme: const TerminalTheme(
-                    cursor: Color(0XAAAEAFAD),
-                    selection: Color(0XAAAEAFAD),
-                    foreground: Color(0XFFCCCCCC),
-                    background: Color(0xFF002B36),
-                    black: Color(0XFF000000),
-                    red: Color(0XFFCD3131),
-                    green: Color(0XFF0DBC79),
-                    yellow: Color(0XFFE5E510),
-                    blue: Color(0XFF2472C8),
-                    magenta: Color(0XFFBC3FBC),
-                    cyan: Color(0XFF11A8CD),
-                    white: Color(0XFFE5E5E5),
-                    brightBlack: Color(0XFF666666),
-                    brightRed: Color(0XFFF14C4C),
-                    brightGreen: Color(0XFF23D18B),
-                    brightYellow: Color(0XFFF5F543),
-                    brightBlue: Color(0XFF3B8EEA),
-                    brightMagenta: Color(0XFFD670D6),
-                    brightCyan: Color(0XFF29B8DB),
-                    brightWhite: Color(0XFFFFFFFF),
-                    searchHitBackground: Color(0XFFFFFF2B),
-                    searchHitBackgroundCurrent: Color(0XFF31FF26),
-                    searchHitForeground: Color(0XFF000000),
+                    GoogleFonts.getFont(
+                      vm.fontFamily,
+                      fontSize: vm.fontSize,
+                      color: vm.terminalTheme.theme.white,
+                      letterSpacing: 0,
+                      fontWeight: vm.isBold ? FontWeight.w900 : FontWeight.normal,
+                    ),
                   ),
+                  autofocus: true,
+                  theme: vm.terminalTheme.theme,
                   backgroundOpacity: 1.0,
                   onSecondaryTapDown: (details, offset) async {
                     final selection = terminalController.selection;

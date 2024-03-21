@@ -1,0 +1,17 @@
+{
+  "name": "theme_generator",
+  "version": "1.0.0",
+  "description": "Theme generate from this repo: https://github.com/ysk2014/xterm-theme",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsx build index.ts",
+    "start": "tsx index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.2.5",
+    "tsx": "^4.7.1"
+  }
+}
