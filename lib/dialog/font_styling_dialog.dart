@@ -2,6 +2,7 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:web_log_console/view_model/home_page_vm.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:web_log_console/theme/terminal_theme.dart';
@@ -188,7 +189,17 @@ class _FontStylingDialogState extends State<FontStylingDialog> {
                         ),
                       ),
                       onPressed: () {
-                        widget.vm.saveToLocalStorage();
+                        widget.vm.saveToLocalStorage().then((_) {
+                          Fluttertoast.showToast(
+                              msg: "Save success",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.orange,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                        });
                       },
                       child: const Text(
                         "Save to browser",
@@ -211,7 +222,17 @@ class _FontStylingDialogState extends State<FontStylingDialog> {
                         ),
                       ),
                       onPressed: () {
-                        widget.vm.retrieveFromLocalStorage();
+                        widget.vm.retrieveFromLocalStorage().then((_) {
+                          Fluttertoast.showToast(
+                              msg: "Reset success",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                        });
                       },
                       child: const Text(
                         "Reset",

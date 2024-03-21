@@ -195,6 +195,7 @@ class _HomePageState extends State<HomePage> {
                 }
                 return TerminalView(
                   terminal,
+                  padding: const EdgeInsets.only(top: 17.0, bottom: 5.0, left: 5.0, right: 5.0),
                   controller: terminalController,
                   textStyle: TerminalStyle.fromTextStyle(
                     GoogleFonts.getFont(
@@ -225,6 +226,11 @@ class _HomePageState extends State<HomePage> {
                 );
               }),
             ),
+            IconButton(onPressed: () {
+              terminal.buffer.clear();
+              terminal.buffer.setCursor(0, 0);
+              terminal.write("");
+            }, icon: const Icon(Icons.delete))
           ],
         ),
       ),
