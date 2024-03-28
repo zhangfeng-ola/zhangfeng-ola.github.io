@@ -2,7 +2,7 @@ name: Flutter Web
 on:
   push:
     branches:
-      - main
+      - web_log_console
 jobs:
   build:
     name: Build Web
