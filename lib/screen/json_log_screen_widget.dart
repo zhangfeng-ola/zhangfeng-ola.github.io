@@ -10,6 +10,8 @@ import 'package:json_view/json_view.dart';
 import 'package:web_log_console/model/display.pbenum.dart';
 import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 
+import '../utils/super_clipboard_util.dart';
+
 class JsonLogScreenWidget extends StatefulWidget {
   final JsonLogScreenVm vm;
 
@@ -215,8 +217,29 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                 ),
                 color: const JsonColorScheme(),
               ),
-              child: JsonView(
-                json: widget.vm.selected ?? Map(),
+              child: Column(
+                children: [
+                  if (widget.vm.selected?.isNotEmpty ?? false)
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            SuperClipboardUtil.writeData(jsonEncode(
+                                widget.vm.selected?['responseBody']));
+                          },
+                          child: const Text("Copy Response Body"),
+                        ),
+                      ],
+                    ),
+                  const Divider(
+                    color: Colors.black,
+                  ),
+                  Expanded(
+                    child: JsonView(
+                      json: widget.vm.selected ?? {},
+                    ),
+                  ),
+                ],
               ),
             );
           }),
