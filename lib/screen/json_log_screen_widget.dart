@@ -12,10 +12,12 @@ import 'package:web_log_console/view_model/json_log_screen_vm.dart';
 
 class JsonLogScreenWidget extends StatefulWidget {
   final JsonLogScreenVm vm;
+
   const JsonLogScreenWidget({
     Key? key,
     required this.vm,
   }) : super(key: key);
+
   @override
   _JsonLogScreenWidget createState() => _JsonLogScreenWidget();
 }
@@ -51,19 +53,27 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                     child: ListView.builder(
                       controller: _scrollController,
                       // reverse: true,
-                      padding: const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 0, top: 8),
+                      padding: const EdgeInsetsDirectional.only(
+                          start: 4, end: 4, bottom: 0, top: 8),
                       itemCount: widget.vm.filterBuffer.length,
                       itemBuilder: ((context, index) {
                         return InkWell(
                           onTap: () {
-                            widget.vm.setSelected(widget.vm.filterBuffer.elementAt(index));
+                            widget.vm.setSelected(
+                                widget.vm.filterBuffer.elementAt(index));
                           },
                           child: Container(
-                            color: index % 2 == 0 ? Colors.white.withOpacity(0.8) : Colors.white.withOpacity(1.0),
+                            color: index % 2 == 0
+                                ? Colors.white.withOpacity(0.8)
+                                : Colors.white.withOpacity(1.0),
+                            alignment: AlignmentDirectional.centerStart,
+                            height: 36,
                             child: Text(
                               widget.vm.filterBuffer.elementAt(index)['url'] ??
-                                  widget.vm.filterBuffer.elementAt(index).toString(),
-                              style: TextStyle(
+                                  widget.vm.filterBuffer
+                                      .elementAt(index)
+                                      .toString(),
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black,
@@ -104,13 +114,17 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         height: 0,
                       ),
                       ElevatedButton(
-                         child: Observer(builder: (_) {
-                          return Text(widget.vm.displayModel == DisplayModel.Normal ? 'Filter' : 'Search');
+                        child: Observer(builder: (_) {
+                          return Text(
+                              widget.vm.displayModel == DisplayModel.Normal
+                                  ? 'Filter'
+                                  : 'Search');
                         }),
                         onPressed: () {
                           if (widget.vm.displayModel == DisplayModel.Normal) {
                             widget.vm.setFilter(_txtEditController.text);
-                          } else if (widget.vm.displayModel == DisplayModel.Search) {
+                          } else if (widget.vm.displayModel ==
+                              DisplayModel.Search) {
                             widget.vm.updateKeyWord(_txtEditController.text);
                           }
                         },
@@ -119,13 +133,14 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         width: 10,
                         height: 0,
                       ),
-                      if(widget.vm.displayModel == DisplayModel.Normal )
+                      if (widget.vm.displayModel == DisplayModel.Normal)
                         ElevatedButton(
                           child: const Text('Clear'),
                           onPressed: () {
                             if (widget.vm.displayModel == DisplayModel.Normal) {
                               widget.vm.clear();
-                            } else if (widget.vm.displayModel == DisplayModel.Search) {
+                            } else if (widget.vm.displayModel ==
+                                DisplayModel.Search) {
                               widget.vm.updateKeyWord('');
                             }
                           },
@@ -135,37 +150,46 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         height: 0,
                       ),
                       ElevatedButton(
-                        child: Observer(builder: (_) {
-                          return Text(widget.vm.displayModel == DisplayModel.Normal ? 'Normal Model' : 'Search Model');
-                        }),
-                        onPressed: () {
-                          widget.vm.switchDisplayModel();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: widget.vm.displayModel == DisplayModel.Normal ? Colors.blue : Colors.green,
-                        )
-                      ),
-                      if(widget.vm.displayModel == DisplayModel.Search )
+                          child: Observer(builder: (_) {
+                            return Text(
+                                widget.vm.displayModel == DisplayModel.Normal
+                                    ? 'Normal Model'
+                                    : 'Search Model');
+                          }),
+                          onPressed: () {
+                            widget.vm.switchDisplayModel();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                widget.vm.displayModel == DisplayModel.Normal
+                                    ? Colors.blue
+                                    : Colors.green,
+                          )),
+                      if (widget.vm.displayModel == DisplayModel.Search)
                         ElevatedButton(
                           child: const Text('Next'),
                           onPressed: () {
                             widget.vm.scrollToNext((p0) {
-                              if(mounted && null != p0.currentContext){
-                                Scrollable.ensureVisible(p0.currentContext!, alignment: 0.2, duration: const Duration(milliseconds: 0) );
-                              } 
-                             });
+                              if (mounted && null != p0.currentContext) {
+                                Scrollable.ensureVisible(p0.currentContext!,
+                                    alignment: 0.2,
+                                    duration: const Duration(milliseconds: 0));
+                              }
+                            });
                           },
                         ),
-                      if(widget.vm.displayModel == DisplayModel.Search )
+                      if (widget.vm.displayModel == DisplayModel.Search)
                         ElevatedButton(
                           child: const Text('Previous'),
                           onPressed: () {
                             widget.vm.scrollToPrevious((p0) {
-                              if(mounted && null != p0.currentContext){
-                                Scrollable.ensureVisible(p0.currentContext!, alignment: 0.2, duration: const Duration(milliseconds: 0));
-                              } 
-                             }); 
+                              if (mounted && null != p0.currentContext) {
+                                Scrollable.ensureVisible(p0.currentContext!,
+                                    alignment: 0.2,
+                                    duration: const Duration(milliseconds: 0));
+                              }
+                            });
                           },
                         ),
                     ],
@@ -203,7 +227,7 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
 
   Widget _buildSearchResult() {
     return Observer(builder: (_) {
-      if(null == widget.vm.selected){
+      if (null == widget.vm.selected) {
         return const SizedBox.shrink();
       }
       List<InlineSpan> textSpans = [];
@@ -232,35 +256,36 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
       }
       String searchKey = widget.vm.keyWord;
       List<GlobalKey> keys = [];
-      jsonString.splitMapJoin(RegExp('(${RegExp.escape(searchKey)})'), onMatch: (m) {
+      jsonString.splitMapJoin(RegExp('(${RegExp.escape(searchKey)})'),
+          onMatch: (m) {
         GlobalKey key = GlobalKey();
         keys.add(key);
         textSpans.add(
           WidgetSpan(
             child: Text(
-            m[0] ?? '',
-            key: key, 
-            style: const TextStyle(
-              color: Color(0xFFFF70CE),
-              fontSize: 16,
-              fontFamily: 'PingFang SC',
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.32,
-            ),
+              m[0] ?? '',
+              key: key,
+              style: const TextStyle(
+                color: Color(0xFFFF70CE),
+                fontSize: 16,
+                fontFamily: 'PingFang SC',
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.32,
+              ),
             ),
           ),
         );
         return m[0]!;
       }, onNonMatch: (n) {
         textSpans.add(TextSpan(
-          text: n,
-          style: const TextStyle(
-            color: Colors.black87,
-            fontSize: 16,
-            fontFamily: 'PingFang SC',
-            fontWeight: FontWeight.w500,
-            letterSpacing: -0.32,
-          )));
+            text: n,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 16,
+              fontFamily: 'PingFang SC',
+              fontWeight: FontWeight.w500,
+              letterSpacing: -0.32,
+            )));
         return n;
       });
       widget.vm.keyList = keys;
