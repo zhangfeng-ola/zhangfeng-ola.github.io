@@ -11,6 +11,7 @@ import 'package:xterm/xterm.dart';
 import './dialog/font_styling_dialog.dart';
 
 import './communication.dart';
+import 'dialog/help_center_dialog.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -182,6 +183,13 @@ class _HomePageState extends State<HomePage> {
                         FontStylingDialog.show(
                             context: context, homePageVm: vm);
                       }),
+                  const SizedBox(width: 20),
+                  IconButton(
+                      iconSize: 20.0,
+                      icon: const Icon(Icons.help_center),
+                      onPressed: () {
+                        HelpCenterDialog.show(context: context);
+                      }),
                 ],
               ),
             )),
@@ -195,7 +203,8 @@ class _HomePageState extends State<HomePage> {
                 }
                 return TerminalView(
                   terminal,
-                  padding: const EdgeInsets.only(top: 17.0, bottom: 5.0, left: 5.0, right: 5.0),
+                  padding: const EdgeInsets.only(
+                      top: 17.0, bottom: 5.0, left: 5.0, right: 5.0),
                   controller: terminalController,
                   textStyle: TerminalStyle.fromTextStyle(
                     GoogleFonts.getFont(
@@ -203,7 +212,8 @@ class _HomePageState extends State<HomePage> {
                       fontSize: vm.fontSize,
                       color: vm.terminalTheme.theme.white,
                       letterSpacing: 0,
-                      fontWeight: vm.isBold ? FontWeight.w900 : FontWeight.normal,
+                      fontWeight:
+                          vm.isBold ? FontWeight.w900 : FontWeight.normal,
                     ),
                   ),
                   autofocus: true,
@@ -226,11 +236,13 @@ class _HomePageState extends State<HomePage> {
                 );
               }),
             ),
-            IconButton(onPressed: () {
-              terminal.buffer.clear();
-              terminal.buffer.setCursor(0, 0);
-              terminal.write("");
-            }, icon: const Icon(Icons.delete))
+            IconButton(
+                onPressed: () {
+                  terminal.buffer.clear();
+                  terminal.buffer.setCursor(0, 0);
+                  terminal.write("");
+                },
+                icon: const Icon(Icons.delete))
           ],
         ),
       ),
