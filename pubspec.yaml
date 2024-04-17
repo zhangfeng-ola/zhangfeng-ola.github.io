@@ -43,7 +43,7 @@ dependencies:
   flutter_mobx: ^2.1.0
   google_fonts: ^4.0.4
   shared_preferences: ^2.2.2
-  fluttertoast: ^8.2.4
+  fluttertoast: 8.2.1
 
   super_clipboard: ^0.4.0
 
