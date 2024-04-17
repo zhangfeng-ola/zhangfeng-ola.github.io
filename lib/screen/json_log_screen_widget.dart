@@ -356,10 +356,18 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
       return jsonMap['url'];
     } else if (jsonMap.containsKey('logLevel') &&
         jsonMap.containsKey('lines')) {
-      String levelFirst =
-          (jsonMap['logLevel'] as String).characters.first.toUpperCase();
-      String lineInfo = jsonMap['lines'].toString();
-      return '[$levelFirst] $lineInfo';
+      String levelFirst = (jsonMap['logLevel'] as String).characters.first;
+      if (jsonMap['lines'] is List) {
+        List lineInfo = jsonMap['lines'] as List;
+        if (lineInfo.first == 'receive:') {
+          return '[$levelFirst] [R] ${lineInfo.skip(1).join(' ')}';
+        } else if (lineInfo.first == 'send:') {
+          return '[$levelFirst] [S] ${lineInfo.skip(1).join(' ')}';
+        }
+        return '[$levelFirst] $lineInfo';
+      } else {
+        return '[$levelFirst] ${jsonMap['lines']}';
+      }
     } else {
       return jsonMap.toString();
     }
