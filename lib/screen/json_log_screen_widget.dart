@@ -71,10 +71,8 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                             alignment: AlignmentDirectional.centerStart,
                             height: 36,
                             child: Text(
-                              widget.vm.filterBuffer.elementAt(index)['url'] ??
-                                  widget.vm.filterBuffer
-                                      .elementAt(index)
-                                      .toString(),
+                              _formatLineInfo(
+                                  widget.vm.filterBuffer.elementAt(index)),
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
@@ -323,5 +321,47 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
         ),
       );
     });
+  }
+
+  /**
+   * 展示在左侧的信息
+   * 目前 log 有 Console, Http, RoomSocket, ImSocket
+   * 其中 Http 返回如下：
+   * var map = <String, dynamic>{};
+      map['url'] = url;
+      map['time'] = time.toString();
+      map['requestHeader'] = requestHeader;
+      map['requestBody'] = requestBody;
+      map['statusCode'] = statusCode;
+      map['responseHeader'] = responseHeader;
+      map['responseBody'] = responseBody;
+      map['duration'] = duration;
+      map['success'] = success;
+      map['reqMethod'] = reqMethod;
+      map['curlString'] = curlString;
+      map['logId'] = logId;
+      return map;
+
+      其他 Log {RoomSocket, ImSocket} 返回
+      {
+      'logLevel': '',
+      'lines': '',
+      }
+   */
+  String _formatLineInfo(Map<String, dynamic> jsonMap) {
+    /// TODO 目前 log 有 Console, Http, RoomSocket, ImSocket
+    /// Http log 返回的是
+    bool isHttpLog = jsonMap.containsKey('url');
+    if (isHttpLog) {
+      return jsonMap['url'];
+    } else if (jsonMap.containsKey('logLevel') &&
+        jsonMap.containsKey('lines')) {
+      String levelFirst =
+          (jsonMap['logLevel'] as String).characters.first.toUpperCase();
+      String lineInfo = jsonMap['lines'].toString();
+      return '[$levelFirst] $lineInfo';
+    } else {
+      return jsonMap.toString();
+    }
   }
 }
