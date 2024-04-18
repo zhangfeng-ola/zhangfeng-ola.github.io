@@ -39,7 +39,7 @@ class _HelpCenterDialogState extends State<HelpCenterDialog> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text(
-                "How to user ??",
+                "How to use ??",
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w800,
