@@ -223,7 +223,8 @@ class _JsonLogScreenWidget extends State<JsonLogScreenWidget> {
                         TextButton(
                           onPressed: () {
                             SuperClipboardUtil.writeData(jsonEncode(
-                                widget.vm.selected?['responseBody']));
+                                widget.vm.selected?['responseBody'],
+                                toEncodable: (o) => o.toString()));
                           },
                           child: const Text("Copy Response Body"),
                         ),

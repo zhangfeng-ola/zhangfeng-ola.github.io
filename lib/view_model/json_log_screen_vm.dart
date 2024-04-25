@@ -22,18 +22,24 @@ abstract class _JsonLogScreenVm with Store {
 
   List<GlobalKey> keyList = [];
   int _currentIndex = -1;
-  void resetIndex(){
+
+  void resetIndex() {
     _currentIndex = -1;
   }
-  void scrollToNext(void Function(GlobalKey) callback,){
-    if(keyList.isEmpty) return;
-    _currentIndex = max((_currentIndex +1)%keyList.length, 0);
+
+  void scrollToNext(
+    void Function(GlobalKey) callback,
+  ) {
+    if (keyList.isEmpty) return;
+    _currentIndex = max((_currentIndex + 1) % keyList.length, 0);
     callback(keyList[_currentIndex]);
   }
 
-  void scrollToPrevious(void Function(GlobalKey) callback,){
-    if(keyList.isEmpty) return;
-    _currentIndex = max((_currentIndex -1)%keyList.length, 0);
+  void scrollToPrevious(
+    void Function(GlobalKey) callback,
+  ) {
+    if (keyList.isEmpty) return;
+    _currentIndex = max((_currentIndex - 1) % keyList.length, 0);
     callback(keyList[_currentIndex]);
   }
 
@@ -50,7 +56,7 @@ abstract class _JsonLogScreenVm with Store {
   Map<String, dynamic>? _selected;
 
   @readonly
-  String _filter = '';  
+  String _filter = '';
 
   @readonly
   String _keyWord = '';
@@ -68,10 +74,10 @@ abstract class _JsonLogScreenVm with Store {
     _displayModel = displayModel;
   }
 
-  void switchDisplayModel(){
-    if(_displayModel == DisplayModel.Normal){
+  void switchDisplayModel() {
+    if (_displayModel == DisplayModel.Normal) {
       _displayModel = DisplayModel.Search;
-    }else{
+    } else {
       _displayModel = DisplayModel.Normal;
     }
   }
@@ -85,36 +91,45 @@ abstract class _JsonLogScreenVm with Store {
       item['responseHeader'] = jsonDecode(item['responseHeader']);
     }
     if (null != item['responseBody'] && item['responseBody'] is String) {
-      item['responseBody'] = jsonDecode(item['responseBody']);
+      try {
+        item['responseBody'] = jsonDecode(item['responseBody']);
+      } catch (e) {
+        if (item.containsKey('url') && item['url'] != '') {
+          String responseBytes = item['responseBody'] as String;
+          print(
+              '[${item['reqMethod']}] url = ${item['url']}, response body = ${responseBytes.runes.toList()}');
+        }
+      }
     }
     _buffer.add(item);
-    if(_filter.trim().isNotEmpty && itemString.contains(_filter.trim())){
+    if (_filter.trim().isNotEmpty && itemString.contains(_filter.trim())) {
       _filterBuffer.add(item);
       _bufferReceived++;
-    }else if(_filter.trim().isEmpty){
+    } else if (_filter.trim().isEmpty) {
       _filterBuffer.add(item);
       _bufferReceived++;
     }
   }
+
   @action
   void setSelected(Map<String, dynamic> item) {
     _selected = item;
   }
 
   @action
-  void setFilter(String filter){
+  void setFilter(String filter) {
     print("$_filter  vs $filter");
-    if(filter.trim() == _filter.trim()){
+    if (filter.trim() == _filter.trim()) {
       return;
     }
     _filter = filter;
-    if(_filter.trim().isEmpty){
+    if (_filter.trim().isEmpty) {
       _filterBuffer = ListQueue.from(_buffer);
       _bufferReceived++;
-    }else {
+    } else {
       _filterBuffer = ListQueue();
-      for(int i=0; i < _buffer.length; i++){
-        if(_buffer.elementAt(i).toString().contains(filter)){
+      for (int i = 0; i < _buffer.length; i++) {
+        if (_buffer.elementAt(i).toString().contains(filter)) {
           _filterBuffer.add(_buffer.elementAt(i));
         }
       }
@@ -123,7 +138,7 @@ abstract class _JsonLogScreenVm with Store {
   }
 
   @action
-  void clear(){
+  void clear() {
     _bufferReceived == 0;
     _filterBuffer = ListQueue();
     _buffer = ListQueue();
